@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from main import me
+from logic import wiki_logic
 import fire
 
 if __name__ == "__main__":
-    fire.Fire(me)
+    fire.Fire(wiki_logic)
