@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 
 app = FastAPI()
 
 
-@app.get("/", status_code=200)
+@app.get("/", status_code=status.HTTP_200_OK)
 def get_endpoint():
     return {"get" : "endpoint"}
