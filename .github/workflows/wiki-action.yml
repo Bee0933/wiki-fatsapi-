@@ -1,0 +1,23 @@
+name: wiki-fastapi test
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: install dependencies
+      run: |
+        make install
+    - name: Format code
+      run: |
+        make format
+    - name: lint with pylint
+      run: |
+        make lint
+    - name: unit tests with pytest
+      run: |
+        make test
