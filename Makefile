@@ -10,3 +10,4 @@ lint:
 	pylint --disable=R,C *.py logic/*.py test/*.py api/*.py
 test:
 	# unit tests
+all: install format lint test
