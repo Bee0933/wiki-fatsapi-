@@ -1,8 +1,7 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI
+from api import wiki_route
+
 
 app = FastAPI()
 
-
-@app.get("/", status_code=status.HTTP_200_OK)
-def get_endpoint():
-    return {"get": "endpoint"}
+app.include_router(wiki_route)
