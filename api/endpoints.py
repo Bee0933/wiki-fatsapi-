@@ -3,6 +3,16 @@ from logic import search_page, search_wiki
 
 wiki_route = APIRouter(prefix="/wiki", tags=["WIKI"])
 
+
+# signin endpoint
+
+
+# login endpoint
+
+
+# refresh token endpoint
+
+
 # search titles
 @wiki_route.post("/search-titles", status_code=status.HTTP_201_CREATED)
 async def search_titles(key: str) -> dict:
