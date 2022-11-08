@@ -46,7 +46,7 @@ async def sigin(user: signUser):
     session.add(new_user)
 
     session.commit()
-    return f"{user.username} registered!"
+    return {"message": f"{user.username} registered!"}
 
 
 # login route
