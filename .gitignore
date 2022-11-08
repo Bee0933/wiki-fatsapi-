@@ -132,4 +132,4 @@ dmypy.json
 .vscode/
 
 # temp on dev
-.env
+# .env
