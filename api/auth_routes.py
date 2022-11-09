@@ -3,10 +3,11 @@ from fastapi.exceptions import HTTPException
 from werkzeug.security import generate_password_hash, check_password_hash
 from fastapi_jwt_auth import AuthJWT
 from fastapi.encoders import jsonable_encoder
-from db import Session, engine, User
+from sqlalchemy.orm import Session
+from db import SessionLocal, User
 from .schema import signUser, logUser, Settings
 
-# create auth router instance for sig-nup and log-in
+# create auth router instance for sign-up and log-in
 auth_route = APIRouter(prefix="/auth", tags=["AUTH"])
 
 # JWT config
@@ -15,13 +16,20 @@ def get_config():
     return Settings()
 
 
-session = Session(bind=engine)
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
+# signin route
 @auth_route.post("/sign-in", status_code=status.HTTP_201_CREATED)
-async def sigin(user: signUser):
+async def sigin(user: signUser, db: Session = Depends(get_db)):
     # query db if email exists
-    db_email = session.query(User).filter(User.email == user.email).first()
+    db_email = db.query(User).filter(User.email == user.email).first()
 
     if db_email is not None:
         return HTTPException(
@@ -29,7 +37,7 @@ async def sigin(user: signUser):
         )
 
     # query db if username exists
-    db_username = session.query(User).filter(User.username == user.username).first()
+    db_username = db.query(User).filter(User.username == user.username).first()
 
     if db_username is not None:
         return HTTPException(
@@ -43,17 +51,19 @@ async def sigin(user: signUser):
         password=generate_password_hash(user.password),
     )
 
-    session.add(new_user)
+    db.add(new_user)
 
-    session.commit()
-    return {"message": f"{user.username} registered!"}
+    db.commit()
+    return {"id": new_user.id, "username": new_user.username, "email": new_user.email}
 
 
 # login route
-@auth_route.post("/log-in")
-async def login(user: logUser, Authorize: AuthJWT = Depends()):
+@auth_route.post("/log-in", status_code=status.HTTP_201_CREATED)
+async def login(
+    user: logUser, db: Session = Depends(get_db), Authorize: AuthJWT = Depends()
+):
     # query db if user exists
-    db_user = session.query(User).filter(User.email == user.email).first()
+    db_user = db.query(User).filter(User.email == user.email).first()
 
     if db_user and check_password_hash(db_user.password, user.password):
 
@@ -72,7 +82,7 @@ async def login(user: logUser, Authorize: AuthJWT = Depends()):
 
 
 # refresh route
-@auth_route.get("/refresh", status_code=status.HTTP_201_CREATED)
+@auth_route.get("/refresh", status_code=status.HTTP_200_OK)
 async def refresh(Authorize: AuthJWT = Depends()):
     try:
         # request access token from authorized user
@@ -91,3 +101,16 @@ async def refresh(Authorize: AuthJWT = Depends()):
     access_token = Authorize.create_access_token(subject=current_user)
 
     return jsonable_encoder({"access token": access_token})
+
+
+# pylint: disable=redefined-builtin
+# get single user
+@auth_route.get("/{id}", status_code=status.HTTP_200_OK)
+def get_user(id: int, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == id).first()
+    response = {
+        "id": db_user.id,
+        "username": db_user.username,
+        "email": db_user.email,
+    }
+    return jsonable_encoder(response)

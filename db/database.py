@@ -12,4 +12,4 @@ Base = declarative_base()
 engine = create_engine(connection_string, echo=True)
 
 # create session instance for db query 
-Session = sessionmaker()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -1,2 +1,2 @@
-from .database import (engine, Session)
+from .database import (engine, SessionLocal, Base)
 from .models import User

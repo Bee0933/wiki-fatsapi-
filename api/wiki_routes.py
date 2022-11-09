@@ -28,7 +28,7 @@ async def search_titles(key: key_search, Authorize: AuthJWT = Depends()) -> dict
         ) from e
 
 
-# search titles
+# search pages
 @wiki_route.post("/search-pages", status_code=status.HTTP_201_CREATED)
 async def search_pages(title: page_search, Authorize: AuthJWT = Depends()) -> dict:
 

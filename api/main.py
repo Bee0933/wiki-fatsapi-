@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from api import wiki_route, auth_route
+from .wiki_routes import wiki_route
+from .auth_routes import auth_route
 
 
 # app instance
