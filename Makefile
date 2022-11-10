@@ -21,4 +21,4 @@ run:
 deploy:
 	# deploy application
 	
-all: install format lint test 
+all: install format lint test build 
