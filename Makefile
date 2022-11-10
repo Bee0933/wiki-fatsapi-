@@ -11,8 +11,14 @@ lint:
 test:
 	# unit tests
 	python3 -m pytest -vv --cov=api --cov=main tests/test_api.py
-testdb:
-	# test db
-	python3 -m pytest -vv --cov=api --cov=main tests/test_db.py  
-
-all: install format lint test testdb
+	python3 -m pytest -vv --cov=api --cov=main tests/test_db.py
+build:
+	# build docker container
+	docker build -t deploy-wiki .
+run:
+	# run docker
+	# docker run -p 127.0.0.1:8001:8001 b94c425346ee
+deploy:
+	# deploy application
+	
+all: install format lint test 

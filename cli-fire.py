@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from logic import wiki_logic
+from .logic import wiki_logic
 import fire
 
 if __name__ == "__main__":
