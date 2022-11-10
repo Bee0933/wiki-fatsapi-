@@ -20,5 +20,9 @@ run:
 	# docker run -p 127.0.0.1:8001:8001 b94c425346ee
 deploy:
 	# deploy application
-	
-all: install format lint test build 
+	aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 531338205655.dkr.ecr.us-east-2.amazonaws.com
+	docker build -t wiki-fast .
+	docker tag wiki-fast:latest 531338205655.dkr.ecr.us-east-2.amazonaws.com/wiki-fast:latest
+	docker push 531338205655.dkr.ecr.us-east-2.amazonaws.com/wiki-fast:latest
+
+all: install format lint test deploy 
