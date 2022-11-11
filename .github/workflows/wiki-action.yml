@@ -24,3 +24,6 @@ jobs:
     - name: build container
       run: |
         make build
+    - name: build container
+      run: |
+        make build
